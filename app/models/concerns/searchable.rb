@@ -51,28 +51,44 @@ module Searchable
       end
 
       if options[:main_category]
-        @search_definition[:query][:bool] ||= {}
-        @search_definition[:query][:bool][:filter] = [
-          { term: { main_category: options[:main_category] } }
-        ]
+        @search_definition[:query][:bool][:filter] ||= []
+        @search_definition[:query][:bool][:filter] << 
+          { term: { "main_category": options[:main_category] } }
       end
 
       if options[:sub_category]
-        @search_definition[:query][:bool] ||= {}
-        @search_definition[:query][:bool][:filter] = [
-          { term: { sub_category: options[:sub_category] } }
-        ]
+        @search_definition[:query][:bool][:filter] ||= []
+        @search_definition[:query][:bool][:filter] << 
+          { term: { "sub_category": options[:sub_category] } }
       end
-
-      if options[:discount_price]
-        @search_definition[:query][:bool] ||= {}
-        @search_definition[:query][:bool][:filter] = [
-          { range: { actual_price: {lte: options[:discount_price]} } }
-        ]
+      
+      if options[:actual_price]
+        @search_definition[:query][:bool][:filter] ||= []
+        @search_definition[:query][:bool][:filter] <<
+          { range: {
+            actual_price: { 
+              gte: options[:actual_price][:gte],
+              lte: options[:actual_price][:lte]
+              } 
+            } 
+          }
       end
+      
+      if options[:ratings]
+        @search_definition[:query][:bool][:filter] ||= []
+        @search_definition[:query][:bool][:filter] <<
+          { range: {
+            ratings: { 
+              gte: options[:ratings][:gte],
+              lte: options[:ratings][:lte]
+              } 
+            } 
+          }
+      end
+      
 
       if options[:sort]
-        @search_definition[:sort] = options[:sort]
+        @search_definition[:sort] = options[:sort].to_hash
       end
 
       __elasticsearch__.search(@search_definition)

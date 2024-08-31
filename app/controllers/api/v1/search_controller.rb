@@ -4,8 +4,8 @@ module Api
   module V1
     class SearchController < ApplicationController
       before_action :validate_params
-
-      SORTING_FIELDS = %w(ratings no_of_ratings discount_price created_at )
+      
+      SORTING_FIELDS = %w(ratings no_of_ratings discount_price actual_price)
       SORTING_ORDERS = %w(asc desc)
       PER_PAGE = [ 10, 25 ]
 
@@ -17,15 +17,15 @@ module Api
         options = {}
         if option_params
           options = {
-            main_category: option_params[:mc],
-            sub_category: option_params[:sc],
+            main_category: option_params[:main_category],
+            sub_category: option_params[:sub_category],
             ratings: option_params[:ratings],
             no_of_ratings: option_params[:n_ratings],
-            actual_price: option_params[:a_price],
+            actual_price: option_params[:actual_price],
             sort: option_params[:sort]
           }
         end
-
+        
         @results = Product.search(params[:query], page, per_page, options).results
       end
 
@@ -42,7 +42,11 @@ module Api
       def permitted_params
         @permitted_params ||= params.require(:search)
                                     .permit(:query, :page, :per_page,
-                                            options: [:mc, :sc, :ratings, :n_ratings, :a_price, sort: {}])
+                                            options: [:main_category, 
+                                                      :sub_category,
+                                                      ratings: [:gte, :lte],
+                                                      actual_price: [:gte, :lte],
+                                                      sort: {}])
       end
 
       ParamValidationErrors = Struct.new(:value) do
@@ -59,20 +63,24 @@ module Api
       def validate_params
         errors = ParamValidationErrors.new("")
 
-        unless permitted_params[:page].to_i >= 0
-          errors += "Page must be a positive integer"
+        if permitted_params[:page].to_i < 0
+          errors += "page must be a positive integer"
         end
-
+        
         unless PER_PAGE.include?(permitted_params[:per_page].to_i)
-          errors += "Per_page must either 10 or 25 products"
-        end
-        unless SORTING_FIELDS.include?(permitted_params[:options][:sort].keys.first) ||
-              SORTING_ORDERS.include?(permitted_params[:options][:sort].value.first)
-          errors += "Sort must include a valid field #{SORTING_FIELDS})"\
-                    " and valid sorting order #{SORTING_ORDERS}"
+          errors += "per_page must either #{PER_PAGE.join(' or ')} products"
         end
 
+        if permitted_params[:options][:sort].present?
+          unless SORTING_FIELDS.include?(permitted_params[:options][:sort].keys.first) ||
+                 SORTING_ORDERS.include?(permitted_params[:options][:sort].values.first)
+            errors += "Sort must include a valid field (#{SORTING_FIELDS.join(',')})"\
+                      " and valid sorting order (#{SORTING_ORDERS.join(',')})"
+          end
+        end
+        
         return if errors.value.empty?
+        
         render json: { error: errors }, status: :bad_request
       end
     end

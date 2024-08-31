@@ -1,7 +1,54 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search</title>
+    </head>
+    <body>
+        <div data-controller="search" class="w-full border-2 border-zinc-100 bg-zinc-50 py-5 px-8 rounded-xl shadow-sm">
+            <div class="bg-gray-200 py-3 px-5 rounded-sm shadow-md max-w-5xl w-full mx-auto">
+                <div class="flex space-x-2">
+                    <input 
+                        type="text" 
+                        placeholder="Search..." 
+                        data-search-target="query"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-sm shadow-md hover:bg-gray-50 focus:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    
+                    <select data-search-target="mainCategory" class="border border-gray-300 rounded-sm shadow-md focus:outline-none hover:bg-gray-200" name="category" id="category">
+                        <option value="">Category</option>
+                        <option value="price_asc">Price asc</option>
+                        <option value="price_desc">Price desc</option>
+                        <option value="ratings_asc">Ratings asc</option>
+                        <option value="ratings_desc">Ratings desc</option>
+                    </select>
+                    
+                    <select data-search-target="subCategory" class="border border-gray-300 rounded-sm shadow-md focus:outline-none hover:bg-gray-200" name="sub_category" id="sub_category">
+                        <option value="">Sub Category</option>
+                        <option value="price_asc">Price asc</option>
+                        <option value="price_desc">Price desc</option>
+                        <option value="ratings_asc">Ratings asc</option>
+                        <option value="ratings_desc">Ratings desc</option>
+                    </select>
+                    
+                    <select data-search-target="orderBy" class="border border-gray-300 rounded-sm shadow-md focus:outline-none hover:bg-gray-200" name="order_by" id="order_by">
+                        <option value="">Order</option>
+                        <option value="price_asc">Price asc</option>
+                        <option value="price_desc">Price desc</option>
+                        <option value="ratings_asc">Ratings asc</option>
+                        <option value="ratings_desc">Ratings desc</option>
+                    </select>
+                    
+                    <button data-action="click->search#search" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-sm shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                        Search
+                    </button>
+                </div>
+            </div>
+            
+            <div data-search-target="productGrid" class="grid grid-cols-4 gap-10 py-8 mx-auto">
+                
+            </div>
+        <div>
+    </body>
 </html>
