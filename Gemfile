@@ -59,3 +59,5 @@ end
 gem "elasticsearch-rails", "~> 8.0"
 gem "elasticsearch-model", "~> 8.0"
 gem "elasticsearch-persistence", "~> 8.0"
+
+gem "tailwindcss-rails", "~> 2.7"

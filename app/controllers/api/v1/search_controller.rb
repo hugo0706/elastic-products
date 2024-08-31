@@ -66,11 +66,12 @@ module Api
         unless PER_PAGE.include?(permitted_params[:per_page].to_i)
           errors += "Per_page must either 10 or 25 products"
         end
-        unless SORTING_FIELDS.include?(permitted_params[:options][:sort].keys.first) ||
-              SORTING_ORDERS.include?(permitted_params[:options][:sort].value.first)
-          errors += "Sort must include a valid field #{SORTING_FIELDS})"\
-                    " and valid sorting order #{SORTING_ORDERS}"
-        end
+        
+        #unless SORTING_FIELDS.include?(permitted_params[:options][:sort].keys.first) ||
+         #     SORTING_ORDERS.include?(permitted_params[:options][:sort].value.first)
+          #errors += "Sort must include a valid field #{SORTING_FIELDS})"\
+           #         " and valid sorting order #{SORTING_ORDERS}"
+           #end
 
         return if errors.value.empty?
         render json: { error: errors }, status: :bad_request
