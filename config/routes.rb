@@ -11,7 +11,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      post 'search', to: 'search#index', as: 'search'
+      namespace :search do
+        post '/', to: 'search#index', as: 'search'
+        get '/filter_fields', to: 'search#filter_fields', as: 'filter_fields'
+      end
     end
   end
 
