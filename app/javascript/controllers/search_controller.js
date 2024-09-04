@@ -4,9 +4,10 @@ export default class extends Controller {
   static targets = ["query", "mainCategory", "subCategory", "orderBy", "productGrid"]
   
   connect() {
+    this.setFilters()
     this.search()
   }
-   
+  
   search() {
     this.showLoadingSpinner()
     

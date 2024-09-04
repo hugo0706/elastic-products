@@ -5,9 +5,7 @@ module Api
     module Search
       class SearchController < ApplicationController
         before_action :validate_params, only: :index
-        skip_forgery_protection
-        
-        FORM_FILTERING_FIELDS = %w(main_category sub_category)
+
         SORTING_FIELDS = %w(ratings no_of_ratings discount_price actual_price)
         SORTING_ORDERS = %w(asc desc)
         PER_PAGE = [ 10, 25 ]
@@ -28,35 +26,8 @@ module Api
               sort: option_params[:sort]
             }
           end
-          
-          @results = Product.search(params[:query], page, per_page, options).results
-        end
-  
-        def filter_fields
-          @search_definition = {
-            "size": 0,
-            "aggs": {}
-          }
-  
-          FORM_FILTERING_FIELDS.each do |field|
-            @search_definition[:aggs]["#{field}_aggregation"] = {
-                "terms": {
-                  "field": field
-                }
-              }
-          end
-  
-          results = Product.__elasticsearch__.search(@search_definition)
-  
-          response = {}
-  
-          FORM_FILTERING_FIELDS.each do |field|
-            filter_fields = results.response["aggregations"]["#{field}_aggregation"]["buckets"]
-            response[field] =
-              filter_fields.map { |r| [ r[:key], r[:doc_count] ] }.to_h
-          end
 
-          render json: response, status: :ok
+          @results = Product.search(params[:query], page, per_page, options).results
         end
   
         private

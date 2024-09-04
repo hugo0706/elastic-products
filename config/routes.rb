@@ -13,7 +13,6 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :search do
         post '/', to: 'search#index', as: 'search'
-        get '/filter_fields', to: 'search#filter_fields', as: 'filter_fields'
       end
     end
   end
