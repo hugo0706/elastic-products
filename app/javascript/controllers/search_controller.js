@@ -4,7 +4,6 @@ export default class extends Controller {
   static targets = ["query", "mainCategory", "subCategory", "orderBy", "productGrid"]
   
   connect() {
-    this.setFilters()
     this.search()
   }
   
@@ -47,8 +46,10 @@ export default class extends Controller {
       options.sub_category = this.subCategoryTarget.value;
     }
     
-    if(this.orderByTarget) { 
-      
+    if(this.orderByTarget.value) { 
+      const [field, order] = this.orderByTarget.value.split('-')
+      options.sort = {}
+      options.sort[field] = order
     }
     return options
   }

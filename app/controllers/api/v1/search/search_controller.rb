@@ -6,7 +6,6 @@ module Api
       class SearchController < ApplicationController
         before_action :validate_params, only: :index
 
-        SORTING_FIELDS = %w(ratings no_of_ratings discount_price actual_price)
         SORTING_ORDERS = %w(asc desc)
         PER_PAGE = [ 10, 25 ]
   
@@ -73,9 +72,9 @@ module Api
           end
   
           if permitted_params[:options][:sort].present?
-            unless SORTING_FIELDS.include?(permitted_params[:options][:sort].keys.first) ||
+            unless sorting_fields.include?(permitted_params[:options][:sort].keys.first) ||
                   SORTING_ORDERS.include?(permitted_params[:options][:sort].values.first)
-              errors += "Sort must include a valid field (#{SORTING_FIELDS.join(',')})"\
+              errors += "Sort must include a valid field (#{sorting_fields.join(',')})"\
                         " and valid sorting order (#{SORTING_ORDERS.join(',')})"
             end
           end
@@ -83,6 +82,10 @@ module Api
           return if errors.value.empty?
           
           render json: { error: errors }, status: :bad_request
+        end
+        
+        def sorting_fields
+          Product::SORTING_FIELDS
         end
       end
     end

@@ -18,12 +18,14 @@
             </select>
         <% end %>
         
-        <select data-search-target="orderBy" class="border border-gray-300 rounded-sm shadow-md focus:outline-none hover:bg-gray-200" name="order_by" id="order_by">
+        <select data-search-target="orderBy" class="max-w-48 border border-gray-300 rounded-sm shadow-md focus:outline-none hover:bg-gray-200" name="order_by" id="order_by">
             <option value="">Order</option>
-            <option value="price_asc">Price asc</option>
-            <option value="price_desc">Price desc</option>
-            <option value="ratings_asc">Ratings asc</option>
-            <option value="ratings_desc">Ratings desc</option>
+            <% @order_bys.each do |order_by| %>
+                <% order_by.values.first.each do |order| %>
+                    <% value = "#{order_by.keys.first}-#{order}"%>
+                    <option value="<%=value%>"><%=value.gsub(/[_-]/, ' ').capitalize%></option>
+                <% end %>
+            <% end %>
         </select>
         
         <button data-action="click->search#search" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-sm shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">

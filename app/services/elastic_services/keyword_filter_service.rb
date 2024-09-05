@@ -4,6 +4,8 @@ module ElasticServices
     def self.get_filters_for(klass)
       form_filtering_fields = klass::FORM_FILTERING_FIELDS
       
+      return unless form_filtering_fields
+      
       @search_definition = {
         "size": 0,
         "aggs": {}
